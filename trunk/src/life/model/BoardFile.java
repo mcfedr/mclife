@@ -19,8 +19,8 @@ along with mclife.  If not, see <http://www.gnu.org/licenses/>.
 
 package life.model;
 
+import java.awt.Color;
 import life.actions.*;
-import life.model.Board.Cell;
 
 import java.io.*;
 import javax.swing.*;
@@ -78,16 +78,24 @@ public class BoardFile {
 		}
 	}
 	static char toChar(Cell c) {
-		switch(c) {
+        return c.alive?'x':' ';
+		/*switch(c) {
 			case RED:
 				return 'r';
 			case GREEN:
 				return 'g';
 			default:
 				return '0';
-		}
+		}*/
 	}
 	static Cell toCell(char c) {
+        switch(c) {
+            case 'x':
+               return new Cell(true, Color.RED);
+            default:
+                return new Cell(false, Color.BLACK);
+        } 
+        /*
 		switch(c) {
 			case 'r':
 				return Cell.RED;
@@ -95,6 +103,6 @@ public class BoardFile {
 				return Cell.GREEN;
 		 	default:
 		 		return Cell.DEAD;
-		 }
+		 }*/
 	 }
 }

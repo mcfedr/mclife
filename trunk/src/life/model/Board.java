@@ -31,11 +31,6 @@ import life.gui.LifeView;
  */
 public class Board {
 	
-	public class Cell {
-		boolean alive;
-		java.awt.Color color;
-	}
-	
 	Cell[][] cells;
 	int size;
 	
@@ -46,7 +41,7 @@ public class Board {
 	public Board(int size) {
 		this.size = size;
 		cells = new Cell[size][size];
-		clear();
+		init();
 	}
 	public void set(int i, int j, Cell c) {
 		cells[i][j] = c;
@@ -59,6 +54,17 @@ public class Board {
 	public Cell[][] getAll() {
 		return cells;
 	}
+    public void init() {
+        init(cells);
+    }
+    public void init(Cell[][] cells) {
+        stepCount = 0;
+		for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++)
+                cells[i][j] = new Cell(false, Color.RED);
+		if(view != null)
+			view.updateAll();
+    }
 	public void clear() {
 		stepCount = 0;
 		for (int i = 0; i < size; i++)
@@ -85,10 +91,10 @@ public class Board {
 		return (Math.random() > 0.8);
 	}
 	Color randomColor() {
-		int i = (int)Math.random() * 9;
-		if(i < 3)
+		int i = (int)(Math.random()*3);
+		if(i < 1)
 			return Color.RED;
-		if(i < 6)
+		if(i < 2)
 			return Color.GREEN;
 		return Color.BLUE;
 	}
@@ -106,23 +112,7 @@ public class Board {
 					c++;
 			}
 		return c;
-	}/*
-	public Cell maxColor(int x, int y) {
-		int[] count = new int[Cell.values().length];
-		for(int i = x-1;i<=x+1;i++)
-			for(int j = y-1;j<=y+1;j++) {
-				int p = wrap(i);
-				int q = wrap(j);
-				if(!(p == x && q == y) && //so as not to count this cell
-						cells[p][q] != Cell.DEAD) //cell not null
-					count[cells[p][q].ordinal()]++;
-			}
-		int i = 0;
-		for(int j = 1;j<count.length;j++)
-			if(count[j] > count[i])
-				i = j;
-		return Cell.values()[i];
-	}*/
+	}
 	Color averageColor(int x, int y) {
 		int a = 0, r = 0, g = 0, b = 0, c = 0;
 		for(int i = x-1;i<=x+1;i++)
@@ -130,7 +120,7 @@ public class Board {
 				int p = wrap(i);
 				int q = wrap(j);
 				if(!(p == x && q == y) && //so as not to count this cell
-						cells[p][q].alive) {//cell not null
+						cells[p][q].alive) {//cell alive
 					int pixel = cells[p][q].color.getRGB();
 					a += (pixel >> 24) & 0xff;
 			        r += (pixel >> 16) & 0xff;
@@ -157,6 +147,7 @@ public class Board {
 	public void step() {
 		
 		Cell[][] nCells = new Cell[size][size];
+        init(nCells);
 		
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
@@ -165,19 +156,18 @@ public class Board {
 						nCells[i][j] = cells[i][j];
 						break;
 					case 3:
-						if(cells[i][j] == Cell.DEAD)
-							nCells[i][j] =  maxColor(i, j);
-						else
-							nCells[i][j] = cells[i][j];
+						if(!cells[i][j].alive)
+							nCells[i][j].alive = true;
+						nCells[i][j].color = averageColor(i, j);
 						break;
 					default:
-						nCells[i][j] = Cell.DEAD;
+						nCells[i][j].alive = false;
 				}
 			}
 			
 		}
 		
-		System.arraycopy(nCells, 0, cells, 0, size);
+		cells = nCells;
 		stepCount++;
 		
 		if(view != null)

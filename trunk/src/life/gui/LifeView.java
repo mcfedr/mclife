@@ -24,7 +24,6 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 
 import life.model.*;
-import life.model.Board.Cell;
 
 /**
  * Concerned with displaying the board
@@ -36,8 +35,6 @@ import life.model.Board.Cell;
 public class LifeView extends JPanel {
 	
 	Color background = Color.WHITE;
-	Color red = Color.RED;
-	Color green = Color.GREEN;
 	Color highlight = Color.BLACK;
 	Color gridC = Color.GRAY;
 	
@@ -91,25 +88,19 @@ public class LifeView extends JPanel {
 		repaint();
 	}
 	void paintCell(Cell c, int i, int j) {
-		g.setColor(toColor(c));
-		if(board.get(i, j) != Cell.DEAD)
+		
+		if(board.get(i, j).alive) {
+            g.setColor(c.color);
 			g.fill3DRect(i * cellSize.width + 1, j * cellSize.height + 1, cellSize.width - 1, cellSize.height - 1, true);
-		else
+        }
+		else {
+            g.setColor(background);
 			g.fillRect(i * cellSize.width + 1, j * cellSize.height + 1, cellSize.width - 1, cellSize.height - 1);
+        }
 	}
-	
+    @Override
 	public void paint(Graphics g) {
 		g.drawImage(image, 0, 0, null);
-	}
-	Color toColor(Cell c) {
-		switch(c) {
-			case RED:
-				return red;
-			case GREEN:
-				return green;
-			default:
-				return background;
-		}
 	}
 	public Dimension getCellSize() {
 		return cellSize;
