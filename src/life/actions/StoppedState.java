@@ -20,7 +20,6 @@ along with mclife.  If not, see <http://www.gnu.org/licenses/>.
 package life.actions;
 
 import life.model.*;
-import life.model.Board.Cell;
 
 import java.awt.Dimension;
 import java.awt.event.*;
@@ -42,6 +41,7 @@ public class StoppedState extends State {
 	public StoppedState(Events e) {
 		super(e);
 	}
+    @Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(events.frame.getClear()))
 			events.board.clear();
@@ -65,6 +65,7 @@ public class StoppedState extends State {
 		else
 			super.actionPerformed(e);
 	}
+    /*@Override
 	public void mouseClicked(MouseEvent e) {
 		
 		Dimension sz = events.frame.getView().getCellSize();
@@ -83,7 +84,8 @@ public class StoppedState extends State {
 					events.board.set(i, j, Cell.DEAD);
 					break;
 			}
-	}
+	}*/
+    @Override
 	public void mouseMoved(MouseEvent e) {
 		
 		Dimension sz = events.frame.getView().getCellSize();
@@ -93,6 +95,7 @@ public class StoppedState extends State {
 		if(i < events.board.size() && j < events.board.size())
 			events.highlighter.highlight(i, j);
 	}
+    @Override
 	public void mouseExited(MouseEvent e) {
 		events.highlighter.clearHighlight();
 	}
