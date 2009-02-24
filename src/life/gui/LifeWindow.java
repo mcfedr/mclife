@@ -43,6 +43,10 @@ public class LifeWindow extends javax.swing.JFrame {
         initComponents();
     }
 
+	public int getSpeed() {
+		return 2000 / (speed.getValue() > 0 ? speed.getValue() : 1);
+	}
+
 	public void setDispatch(EventState d) {
 		dispatch = d;
 		if(view != null) view.setDispatch(dispatch);
@@ -71,6 +75,23 @@ public class LifeWindow extends javax.swing.JFrame {
 		stepcount.setText("Steps: " + (board!=null?board.getStepCount():0));
 	}
 
+	public void setRunningState() {
+		clear.setEnabled(false);
+		randomise.setEnabled(false);
+		step.setEnabled(false);
+		runToggle.setText("Pause");
+		open.setEnabled(false);
+		save.setEnabled(false);
+	}
+
+	public void setStoppedState() {
+		clear.setEnabled(true);
+		randomise.setEnabled(true);
+		step.setEnabled(true);
+		runToggle.setText("Run");
+		open.setEnabled(true);
+		save.setEnabled(true);
+	}
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -82,7 +103,9 @@ public class LifeWindow extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
-        stop = new javax.swing.JButton();
+        step = new javax.swing.JButton();
+        clear = new javax.swing.JButton();
+        randomise = new javax.swing.JButton();
         runToggle = new javax.swing.JToggleButton();
         jPanel3 = new javax.swing.JPanel();
         speed = new javax.swing.JSlider();
@@ -108,16 +131,38 @@ public class LifeWindow extends javax.swing.JFrame {
 
         jToolBar1.setRollover(true);
 
-        stop.setText("Step");
-        stop.setFocusable(false);
-        stop.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        stop.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        stop.addActionListener(new java.awt.event.ActionListener() {
+        step.setText("Step");
+        step.setFocusable(false);
+        step.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        step.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        step.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                stopActionPerformed(evt);
+                stepActionPerformed(evt);
             }
         });
-        jToolBar1.add(stop);
+        jToolBar1.add(step);
+
+        clear.setText("Clear");
+        clear.setFocusable(false);
+        clear.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        clear.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        clear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(clear);
+
+        randomise.setText("Randomise");
+        randomise.setFocusable(false);
+        randomise.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        randomise.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        randomise.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                randomiseActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(randomise);
 
         runToggle.setText("Run");
         runToggle.setFocusable(false);
@@ -212,12 +257,17 @@ public class LifeWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 	private void runToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runToggleActionPerformed
-		if(dispatch != null) dispatch.runToggle();
+		if(dispatch != null) {
+			if(runToggle.isSelected())
+				dispatch.run();
+			else
+				dispatch.stop();
+		}
 }//GEN-LAST:event_runToggleActionPerformed
 
-	private void stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopActionPerformed
-		if(dispatch != null) dispatch.stop();
-}//GEN-LAST:event_stopActionPerformed
+	private void stepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stepActionPerformed
+		if(dispatch != null) dispatch.step();
+}//GEN-LAST:event_stepActionPerformed
 
 	private void openActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openActionPerformed
 		if(dispatch != null) dispatch.open();
@@ -232,16 +282,24 @@ public class LifeWindow extends javax.swing.JFrame {
 	}//GEN-LAST:event_quitActionPerformed
 
 	private void gridToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gridToggleActionPerformed
-		if(dispatch != null) dispatch.gridToggle();
+		if(view != null) view.getGridManager().setEnabled(gridToggle.isSelected());
 }//GEN-LAST:event_gridToggleActionPerformed
 
 	private void speedStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_speedStateChanged
-		if(dispatch != null) dispatch.speed(2000 / (speed.getValue() > 0 ? speed.getValue() : 1));
+		if(dispatch != null) dispatch.speed(getSpeed());
 }//GEN-LAST:event_speedStateChanged
 
 	private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
 		if(view != null) view.updateSize();
 	}//GEN-LAST:event_formComponentResized
+
+	private void randomiseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomiseActionPerformed
+		if(dispatch != null) dispatch.randomise();
+}//GEN-LAST:event_randomiseActionPerformed
+
+	private void clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearActionPerformed
+		if(dispatch != null) dispatch.clear();
+	}//GEN-LAST:event_clearActionPerformed
 
     /**
     * @param args the command line arguments
@@ -256,6 +314,7 @@ public class LifeWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton clear;
     private javax.swing.JCheckBoxMenuItem gridToggle;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -267,11 +326,12 @@ public class LifeWindow extends javax.swing.JFrame {
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JMenuItem open;
     private javax.swing.JMenuItem quit;
+    private javax.swing.JButton randomise;
     private javax.swing.JToggleButton runToggle;
     private javax.swing.JMenuItem save;
     private javax.swing.JSlider speed;
+    private javax.swing.JButton step;
     private javax.swing.JLabel stepcount;
-    private javax.swing.JButton stop;
     // End of variables declaration//GEN-END:variables
 
 }

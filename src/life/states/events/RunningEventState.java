@@ -18,10 +18,22 @@
 
 package life.states.events;
 
+import life.states.StateManager;
+
 /**
  *
  * @author mcfedr
  */
 public class RunningEventState extends EventState {
-
+	public RunningEventState(StateManager s) {
+		sm = s;
+	}
+	@Override
+	public void timer() {
+		sm.getBoardManager().getStepper().step();
+		sm.getWindow().update();
+	}
+	public void stop() {
+		sm.setStoppedState();
+	}
 }

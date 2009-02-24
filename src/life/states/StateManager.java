@@ -18,29 +18,79 @@
 
 package life.states;
 
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import life.controller.BoardManager;
+import life.gui.LifeWindow;
 import life.states.events.*;
 
+import javax.swing.Timer;
 /**
  *
  * @author mcfedr
  */
 public class StateManager {
-	EventState ;
+	EventState running;
 	EventState stopped;
-
 	EventState currentState;
 
+	LifeWindow window;
+
+	BoardManager manager;
+
+	Timer timer;
+
 	public StateManager() {
-		running = new RunningEventState();
-		stopped = new StoppedEventState();
+		running = new RunningEventState(this);
+		stopped = new StoppedEventState(this);
 
 		currentState = stopped;
+		timer = new Timer(2000 / window.getSpeed(), new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				currentState.timer();
+			}
+		});
+		setStoppedState();
+	}
+
+	public BoardManager getBoardManager() {
+		return manager;
+	}
+
+	public Timer getTimer() {
+		return timer;
+	}
+
+	public LifeWindow getWindow() {
+		return window;
+	}
+
+	public void setBoardManager(BoardManager b) {
+		manager = b;
+	}
+
+	public void setWindow(LifeWindow w) {
+		window = w;
 	}
 
 	public void setStoppedState() {
-
+		currentState = stopped;
+		timer.stop();
+		if(window != null) {
+			window.setDispatch(currentState);
+			window.setStoppedState();
+		}
 	}
-
+	public void setRunningState() {
+		currentState = running;
+		timer.start();
+		if(window != null) {
+			window.setDispatch(currentState);
+			window.setRunningState();
+		}
+	}
 	public EventState getCurrentEventState() {
 		return currentState;
 	}

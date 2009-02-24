@@ -19,12 +19,20 @@
 package life.states.events;
 
 import java.awt.event.MouseEvent;
+import javax.swing.JOptionPane;
+import life.states.StateManager;
 
 /**
  *
  * @author mcfedr
  */
 public abstract class EventState {
+
+	StateManager sm;
+
+	public void clear() {
+		
+	}
 
 	public void mouseClicked(MouseEvent e) {
 
@@ -41,36 +49,31 @@ public abstract class EventState {
 	public void open() {
 		
 	}
+
+	public void randomise() {
+
+	}
 	public void save() {
 	
 	}
 	public void exit() {
-		
+		sm.setStoppedState();
+		if(JOptionPane.showConfirmDialog(sm.getWindow(), "Are you sure you want to exit?", "Exit", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+			System.exit(0);
 	}
-	public void gridToggle() {
-		
-	}
-	boolean running = false;
-	public void runToggle() {
-		if(running) {
-			running = false;
-			stop();
-		}
-		else {
-			running = true;
-			run();
-		}
-	}
+	
 	public void run() {
-
 	}
 	public void stop() {
-
 	}
 	public void step() {
 
 	}
 	public void speed(int s) {
-		
+		sm.getTimer().setDelay(s);
+	}
+
+	public void timer() {
+
 	}
 }

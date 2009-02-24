@@ -114,6 +114,10 @@ public class LifeView extends JPanel {
 			repaint();
 		}
 	}
+
+	public GridManager getGridManager() {
+		return grid;
+	}
 	void paintCell(Cell c, int i, int j) {
 		if(c.isAlive()) {
             g.setColor(c.getColor());
