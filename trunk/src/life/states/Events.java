@@ -17,10 +17,12 @@ You should have received a copy of the GNU General Public License
 along with mclife.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package life.actions;
+package life.states;
 
 import javax.swing.Timer;
 
+import life.controller.BoardManager;
+import life.controller.Stepper;
 import life.model.*;
 import life.gui.*;
 
@@ -36,17 +38,22 @@ public class Events {
 	State cState;
 	StoppedState stopped;
 	RunningState running;
-	
+
+	public BoardManager manager;
+	public Stepper stepper;
+
 	public Board board;
 	public LifeFrame frame;
 	public Highlighter highlighter;
 	
 	Timer timer;
 	
-	public Events(Board b, LifeFrame f) {
-		board = b;
+	public Events(BoardManager m, LifeFrame f) {
+		manager = m;
 		frame = f;
+		board = manager.getBoard();
 		highlighter = frame.getView().getHighlighter();
+		stepper = manager.getStepper();
 		stopped = new StoppedState(this);
 		running = new RunningState(this);
 		timer = new Timer(1000 / frame.getSlider().getValue(), running);

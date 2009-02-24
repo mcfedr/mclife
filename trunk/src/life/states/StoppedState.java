@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with mclife.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package life.actions;
+package life.states;
 
 import life.model.*;
 
@@ -44,9 +44,9 @@ public class StoppedState extends State {
     @Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(events.frame.getClear()))
-			events.board.clear();
+			events.manager.clear();
 		else if(e.getSource().equals(events.frame.getStep())) {
-			events.board.step();
+			events.stepper.step();
 			events.frame.getCount().setText("" + events.board.getStepCount());
 		}
 		else if(e.getSource().equals(events.frame.getRun()))
@@ -57,7 +57,7 @@ public class StoppedState extends State {
 			BoardFile.save(events);
 		else if(e.getSource().equals(events.frame.getRandom()))
 			try {
-				events.board.randomise(Integer.parseInt(JOptionPane.showInputDialog(events.frame, "Give the size of the new board:", events.board.size())));
+				events.manager.randomise(Integer.parseInt(JOptionPane.showInputDialog(events.frame, "Give the size of the new board:", events.board.getSize())));
 			}
 			catch(NumberFormatException nfe) {
 				
@@ -92,7 +92,7 @@ public class StoppedState extends State {
 		int i = e.getX() / sz.width;
 		int j = e.getY() / sz.height;
 	
-		if(i < events.board.size() && j < events.board.size())
+		if(i < events.board.getSize() && j < events.board.getSize())
 			events.highlighter.highlight(i, j);
 	}
     @Override

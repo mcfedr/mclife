@@ -17,24 +17,30 @@ You should have received a copy of the GNU General Public License
 along with mclife.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package life.actions;
+package life.states;
 
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.*;
 
 /**
- * Passes on resize events to the current state
+ * Deals with actions in the running state
+ * stops when run button is pressed
+ * steps as the timer goes
  *
  */
-
-public class ResizeEvents extends ComponentAdapter {
-
-	Events events;
-	
-	public ResizeEvents(Events e) {
-		events = e;
+public class RunningState extends State {
+	public RunningState(Events e) {
+		super(e);
 	}
-	public void componentResized(ComponentEvent e) {
-		events.getCurrentState().componentResized(e);
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(events.frame.getRun())) {
+			events.setStopped();
+		}
+		else if(e.getSource().equals(events.timer)) {
+			events.stepper.step();
+			events.frame.getCount().setText("" + events.board.getStepCount());
+		}
+		else
+			super.actionPerformed(e);
 	}
 }

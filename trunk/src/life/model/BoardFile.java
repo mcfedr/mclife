@@ -20,7 +20,7 @@ along with mclife.  If not, see <http://www.gnu.org/licenses/>.
 package life.model;
 
 import java.awt.Color;
-import life.actions.*;
+import life.states.*;
 
 import java.io.*;
 import javax.swing.*;
@@ -34,7 +34,7 @@ import javax.swing.*;
 public class BoardFile {
 	public static void load(Events e) {
 		JFileChooser fc = new JFileChooser();
-		if(fc.showOpenDialog(e.frame) == JFileChooser.APPROVE_OPTION) {
+		if (fc.showOpenDialog(e.frame) == JFileChooser.APPROVE_OPTION) {
 			try {
 				BufferedReader in = new BufferedReader(new FileReader(fc.getSelectedFile()));
 				String x = in.readLine();
@@ -42,19 +42,18 @@ public class BoardFile {
 				Cell[][] cells = new Cell[size][size];
 				int i = 0;
 				do {
-					for(int j = 0;j < size;j++) {
+					for (int j = 0; j < size; j++) {
 						cells[i][j] = toCell(x.charAt(j));
 					}
 					i++;
 					x = in.readLine();
 				}
-				while(i < size);
-				e.board.size = size;
-				e.board.cells = cells;
+				while (i < size);
+				e.board.setCells(cells);
 				e.frame.getView().updateSize();
 				e.frame.getView().updateAll();
 			}
-			catch(IOException ioe) {
+			catch (IOException ioe) {
 				JOptionPane.showMessageDialog(e.frame, "Error loading file, please check it is a valid Life save", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
@@ -64,7 +63,7 @@ public class BoardFile {
 		if(fc.showSaveDialog(e.frame) == JFileChooser.APPROVE_OPTION) {
 			try {
 				BufferedWriter out = new BufferedWriter(new FileWriter(fc.getSelectedFile()));
-				Cell[][] cells = e.board.getAll();
+				Cell[][] cells = e.board.getCells();
 				for(Cell[] cs : cells) {
 					for(Cell c : cs)
 						out.append(toChar(c));
@@ -78,7 +77,7 @@ public class BoardFile {
 		}
 	}
 	static char toChar(Cell c) {
-        return c.alive?'x':' ';
+        return c.isAlive()?'x':' ';
 		/*switch(c) {
 			case RED:
 				return 'r';

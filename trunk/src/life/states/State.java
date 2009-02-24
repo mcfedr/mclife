@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with mclife.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package life.actions;
+package life.states;
 
 import java.awt.event.*;
 
@@ -39,8 +39,9 @@ public abstract class State implements ActionListener {
 	public State(Events e) {
 		events = e;
 	}
+	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(events.frame.getStop())) {
+		if(e.getSource().equals(events.frame.getExit())) {
 			events.setStopped();
 			if(JOptionPane.showConfirmDialog(events.frame, "Are you sure you want to exit?", "Exit", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
 				System.exit(0);
