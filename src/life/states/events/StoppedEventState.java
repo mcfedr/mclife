@@ -18,10 +18,36 @@
 
 package life.states.events;
 
+import javax.swing.JOptionPane;
+import life.states.StateManager;
+
 /**
  *
  * @author mcfedr
  */
 public class StoppedEventState extends EventState {
+	public StoppedEventState(StateManager s) {
+		sm = s;
+	}
+	@Override
+	public void run() {
+		sm.setRunningState();
+	}
+	@Override
+	public void clear() {
+		sm.getBoardManager().clear();
+	}
+	@Override
+	public void open() {
+		
+	}
+	@Override
+	public void randomise() {
+		try {
+				sm.getBoardManager().randomise(Integer.parseInt(JOptionPane.showInputDialog(sm.getWindow(), "Give the size of the new board:", sm.getBoardManager().getBoard().getSize())));
+			}
+			catch(NumberFormatException nfe) {
 
+			}
+	}
 }
