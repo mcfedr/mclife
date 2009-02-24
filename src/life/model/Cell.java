@@ -27,10 +27,28 @@ import java.awt.Color;
  */
 public class Cell {
 
+    boolean alive;
+    Color color;
+
     public Cell(boolean a, Color c) {
         alive = a;
         color = c;
     }
-    public boolean alive;
-    public Color color;
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean a) {
+        alive = a;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
 }

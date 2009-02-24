@@ -30,19 +30,16 @@ public class Highlighter {
 	
 	LifeView view;
 	
-	Color color;
+	int hI = -1, hJ = -1;
 	
-	int hI, hJ;
-	
-	public Highlighter(LifeView l, Color c) {
+	public Highlighter(LifeView l) {
 		view = l;
-		color = c;
 	}
 	public void highlight(int i, int j) {
 		clearHighlight();
 		hI = i;
 		hJ = j;
-		view.grid.drawGrid(hI, hJ, color);
+		view.grid.drawGrid(hI, hJ, view.highlight);
 		view.repaint();
 	}
 	public void clearHighlight() {

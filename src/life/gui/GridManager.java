@@ -29,36 +29,37 @@ import java.awt.Color;
 public class GridManager {
 
 	LifeView life;
-	
-	Color color;
-	
 	boolean enabled;
 	
-	public GridManager(LifeView l, Color c) {
+	public GridManager(LifeView l) {
 		life = l;
-		color = c;
-		enabled = true;
+		setEnabled(true);
 	}
 	public void drawGrid() {
 		if(enabled)
-			drawGrid(color);
+			drawGrid(life.gridC);
 		else
 			drawGrid(life.background);
 	}
 	public void drawGrid(Color c) {
-		for (int i = 0; i < life.size; i++)
-			for(int j = 0;j < life.size; j++) 
-				drawGrid(i, j, c);
+		if(life.board != null && life.g != null) {
+			int size = life.board.getSize();
+			for (int i = 0; i < size; i++)
+				for(int j = 0;j < size; j++)
+					drawGrid(i, j, c);
+		}
 	}
 	public void drawGrid(int i, int j) {
 		if(enabled)
-			drawGrid(i, j, color);
+			drawGrid(i, j, life.gridC);
 		else
 			drawGrid(i, j, life.background);
 	}
 	public void drawGrid(int i, int j, Color c) {
-		life.g.setColor(c);
-		life.g.drawRect(i * life.cellSize.width, j * life.cellSize.height, life.cellSize.width, life.cellSize.height);
+		if(life.g != null) {
+			life.g.setColor(c);
+			life.g.drawRect(i * life.cellSize.width, j * life.cellSize.height, life.cellSize.width, life.cellSize.height);
+		}
 	}
 	public boolean isEnabled() {
 		return enabled;
