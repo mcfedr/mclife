@@ -19,9 +19,6 @@ along with mclife.  If not, see <http://www.gnu.org/licenses/>.
 
 package life;
 
-import life.states.events.EventState;
-import life.actions.*;
-import life.controller.BoardManager;
 import life.gui.*;
 import life.model.*;
 

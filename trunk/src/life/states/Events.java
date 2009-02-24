@@ -49,36 +49,15 @@ public class Events {
 	Timer timer;
 	
 	public Events(BoardManager m, LifeFrame f) {
-		manager = m;
-		frame = f;
-		board = manager.getBoard();
-		highlighter = frame.getView().getHighlighter();
-		stepper = manager.getStepper();
-		stopped = new StoppedState(this);
-		running = new RunningState(this);
-		timer = new Timer(1000 / frame.getSlider().getValue(), running);
-		setStopped();
+		
 	}
 	public void setStopped() {
 		cState = stopped;
-		timer.stop();
-		frame.getClear().setEnabled(true);
-		frame.getStep().setEnabled(true);
-		frame.getRun().setText("Run");
-		frame.getLoad().setEnabled(true);
-		frame.getSave().setEnabled(true);
-		frame.getRandom().setEnabled(true);
+		
 	}
 	public void setRunning() {
 		cState = running;
-		timer.start();
-		frame.getClear().setEnabled(false);
-		frame.getStep().setEnabled(false);
-		frame.getRun().setText("Pause");
-		frame.getLoad().setEnabled(false);
-		frame.getSave().setEnabled(false);
-		frame.getRandom().setEnabled(false);
-		highlighter.clearHighlight();
+		
 	}
 	public State getCurrentState() {
 		return cState;
