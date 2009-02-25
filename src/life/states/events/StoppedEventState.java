@@ -20,6 +20,7 @@ package life.states.events;
 
 import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
+import life.model.BoardFile;
 import life.states.StateManager;
 
 /**
@@ -54,11 +55,11 @@ public class StoppedEventState extends EventState {
 	}
 	@Override
 	public void open() {
-		
+		BoardFile.load(sm);
 	}
 	@Override
 	public void save() {
-
+		BoardFile.save(sm);
 	}
 
 	public void mouseClicked(MouseEvent e) {
