@@ -18,6 +18,7 @@
 
 package life.states.events;
 
+import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
 import life.states.StateManager;
 
@@ -35,19 +36,33 @@ public class StoppedEventState extends EventState {
 	}
 	@Override
 	public void clear() {
-		sm.getBoardManager().clear();
+		if(sm.getBoardManager() != null) sm.getBoardManager().clear();
+	}
+	@Override
+	public void step() {
+		if(sm.getBoardManager() != null) sm.getBoardManager().getStepper().step();
+	}
+	@Override
+	public void randomise() {
+		if (sm.getBoardManager() != null) {
+			try {
+				sm.getBoardManager().randomise(Integer.parseInt(JOptionPane.showInputDialog(sm.getWindow(), "Give the size of the new board:", sm.getBoardManager().getBoard().getSize())));
+			}
+			catch (NumberFormatException nfe) {
+			}
+		}
 	}
 	@Override
 	public void open() {
 		
 	}
 	@Override
-	public void randomise() {
-		try {
-				sm.getBoardManager().randomise(Integer.parseInt(JOptionPane.showInputDialog(sm.getWindow(), "Give the size of the new board:", sm.getBoardManager().getBoard().getSize())));
-			}
-			catch(NumberFormatException nfe) {
+	public void save() {
 
-			}
 	}
+
+	public void mouseClicked(MouseEvent e) {
+
+	}
+	
 }

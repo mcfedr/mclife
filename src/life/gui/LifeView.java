@@ -59,18 +59,33 @@ public class LifeView extends JPanel {
 		addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				if(dispatch != null) dispatch.mouseMoved(e);
+				if(board != null) {
+					int i = e.getX() / cellSize.width;
+					int j = e.getY() / cellSize.height;
+
+					if (i < board.getSize() && j < board.getSize()) {
+						highlighter.highlight(i, j);
+					}
+				}
 			}
 		});
 
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(dispatch != null) dispatch.mouseClicked(e);
+				if(board != null) {
+					int i = e.getX() / cellSize.width;
+					int j = e.getY() / cellSize.height;
+
+					if (i < board.getSize() && j < board.getSize()) {
+						if(dispatch != null) dispatch.mouseClicked(i, j);
+					}
+				}
+				
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				if(dispatch != null) dispatch.mouseExited(e);
+				highlighter.clearHighlight();
 			}
 		});
 
@@ -130,16 +145,7 @@ public class LifeView extends JPanel {
 	}
     @Override
 	public void paint(Graphics g) {
-		g.drawImage(image, 0, 0, null);
-	}
-	public Dimension getCellSize() {
-		return cellSize;
-	}
-	public Highlighter getHighlighter() {
-		return highlighter;
-	}
-	public GridManager getGrid() {
-		return grid;
+		if(board != null) g.drawImage(image, 0, 0, null);
 	}
 
 	void setBoard(Board b) {
