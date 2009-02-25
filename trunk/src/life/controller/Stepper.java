@@ -28,41 +28,41 @@ import life.model.*;
 public class Stepper {
 
 	BoardManager manager;
-    Board board;
 
     public Stepper(BoardManager m) {
 		manager = m;
-        board = manager.getBoard();
     }
     
     public void step() {
-        Cell[][] cells = board.getCells();
-        Cell[][] nCells = new Cell[cells.length][cells.length];
+		if(manager.getBoard() != null) {
+			Cell[][] cells = manager.getBoard().getCells();
+			Cell[][] nCells = new Cell[cells.length][cells.length];
 
-		for (int i = 0; i < cells.length; i++) {
-			for (int j = 0; j < cells.length; j++) {
-				nCells[i][j] = cells[i][j];
-				switch(countNieghbours(i, j)) {
-					case 2://change nothing
-						nCells[i][j].setColor(brighten(nCells[i][j].getColor()));
-						break;
-					case 3://bring to life
-						nCells[i][j].setAlive(true);
-						nCells[i][j].setColor(averageColor(i, j));
-						break;
-					default://kill
-						nCells[i][j].setAlive(false);
+			for (int i = 0; i < cells.length; i++) {
+				for (int j = 0; j < cells.length; j++) {
+					nCells[i][j] = cells[i][j];
+					switch(countNieghbours(i, j)) {
+						case 2://change nothing
+							nCells[i][j].setColor(brighten(nCells[i][j].getColor()));
+							break;
+						case 3://bring to life
+							nCells[i][j].setAlive(true);
+							nCells[i][j].setColor(averageColor(i, j));
+							break;
+						default://kill
+							nCells[i][j].setAlive(false);
+					}
 				}
+
 			}
 
+			manager.getBoard().setCells(nCells);
+			manager.notifyView();
 		}
-
-		board.setCells(nCells);
-		manager.notifyView();
 	}
 
     int countNieghbours(int x, int y) {
-        Cell[][] cells = board.getCells();
+        Cell[][] cells = manager.getBoard().getCells();
 		int c = 0;
 		for(int i = x-1;i<=x+1;i++)
 			for(int j = y-1;j<=y+1;j++) {
@@ -75,7 +75,7 @@ public class Stepper {
 		return c;
 	}
 	Color averageColor(int x, int y) {
-        Cell[][] cells = board.getCells();
+        Cell[][] cells = manager.getBoard().getCells();
 		int a = 0, r = 0, g = 0, b = 0, c = 0;
 		for(int i = x-1;i<=x+1;i++)
 			for(int j = y-1;j<=y+1;j++) {
@@ -100,7 +100,7 @@ public class Stepper {
 	}
 
     int wrap(int i) {
-        int size = board.getCells().length;
+        int size = manager.getBoard().getSize();
 		if(i >= size)
 			return i-size;
 		if(i < 0)

@@ -20,7 +20,7 @@ package life.controller;
 
 import java.awt.Color;
 import java.util.Random;
-import life.gui.LifeView;
+import life.gui.LifeWindow;
 import life.model.*;
 
 /**
@@ -29,20 +29,21 @@ import life.model.*;
  */
 public class BoardManager {
 
-    LifeView view;
+    LifeWindow window;
     Board board;
 	Stepper stepper;
 
-    public BoardManager(Board b) {
-        board = b;
+    public BoardManager() {
 	}
 	public void clear() {
-		board.setStepCount(0);
-        Cell[][] cells = board.getCells();
-		for (int i = 0; i < cells.length; i++)
-			for (int j = 0; j < cells.length; j++)
-				cells[i][j].setAlive(false);
-		notifyView();
+		if(board != null) {
+			board.setStepCount(0);
+			Cell[][] cells = board.getCells();
+			for (int i = 0; i < cells.length; i++)
+				for (int j = 0; j < cells.length; j++)
+					cells[i][j].setAlive(false);
+			notifyView();
+		}
 	}
 
 	public Board getBoard() {
@@ -56,21 +57,26 @@ public class BoardManager {
 		return stepper;
 	}
 	public void randomise(int s) {
-        board.setStepCount(0);
-		Random r = new Random();
-        Cell[][] cells = new Board(s).getCells();
-		for (int i = 0; i < cells.length; i++)
-			for (int j = 0; j < cells.length; j++) {
-				cells[i][j].setAlive(randomAlive(r));
-				cells[i][j].setColor(randomColor(r));
-            }
-		board.setCells(cells);
-		notifyView();
+		if(board != null) {
+			board.setStepCount(0);
+			Random r = new Random();
+			Cell[][] cells = new Board(s).getCells();
+			for (int i = 0; i < cells.length; i++)
+				for (int j = 0; j < cells.length; j++) {
+					cells[i][j].setAlive(randomAlive(r));
+					cells[i][j].setColor(randomColor(r));
+				}
+			board.setCells(cells);
+			notifyView();
+		}
+	}
+
+	public void setBoard(Board b) {
+		board = b;
 	}
 
 	void notifyView() {
-		if(view != null)
-			view.updateAll();
+		if(window != null) window.update();
 	}
 	boolean randomAlive(Random r) {
 		return r.nextBoolean();
@@ -78,8 +84,8 @@ public class BoardManager {
 	Color randomColor(Random r) {
 		return new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255), 25);
 	}
-	public void setView(LifeView v) {
-		view = v;
+	public void setView(LifeWindow w) {
+		window = w;
 	}
 	public int getStepCount() {
 		return board.getStepCount();

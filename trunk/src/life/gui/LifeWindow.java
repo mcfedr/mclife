@@ -73,6 +73,7 @@ public class LifeWindow extends javax.swing.JFrame {
 
 	public void update() {
 		stepcount.setText("Steps: " + (board!=null?board.getStepCount():0));
+		if(view != null) view.updateAll();
 	}
 
 	public void setRunningState() {

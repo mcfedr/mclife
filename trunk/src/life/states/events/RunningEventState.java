@@ -29,10 +29,16 @@ public class RunningEventState extends EventState {
 		sm = s;
 	}
 	@Override
-	public void timer() {
-		sm.getBoardManager().getStepper().step();
-		sm.getWindow().update();
+	public void exit() {
+		sm.setStoppedState();
+		super.exit();
 	}
+	@Override
+	public void timer() {
+		if(sm.getBoardManager() != null) sm.getBoardManager().getStepper().step();
+		if(sm.getWindow() != null) sm.getWindow().update();
+	}
+	@Override
 	public void stop() {
 		sm.setStoppedState();
 	}

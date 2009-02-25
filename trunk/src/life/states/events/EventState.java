@@ -31,33 +31,16 @@ public abstract class EventState {
 	StateManager sm;
 
 	public void clear() {
-		
 	}
-
-	public void mouseClicked(MouseEvent e) {
-
+	public void mouseClicked(int x, int y) {
 	}
-
-	public void mouseExited(MouseEvent e) {
-		
-	}
-
-	public void mouseMoved(MouseEvent e) {
-		
-	}
-	
 	public void open() {
-		
 	}
-
 	public void randomise() {
-
 	}
 	public void save() {
-	
 	}
 	public void exit() {
-		sm.setStoppedState();
 		if(JOptionPane.showConfirmDialog(sm.getWindow(), "Are you sure you want to exit?", "Exit", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
 			System.exit(0);
 	}
@@ -67,13 +50,10 @@ public abstract class EventState {
 	public void stop() {
 	}
 	public void step() {
-
 	}
 	public void speed(int s) {
 		sm.getTimer().setDelay(s);
 	}
-
 	public void timer() {
-
 	}
 }
