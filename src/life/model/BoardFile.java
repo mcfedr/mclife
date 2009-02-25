@@ -20,10 +20,12 @@ along with mclife.  If not, see <http://www.gnu.org/licenses/>.
 package life.model;
 
 import java.awt.Color;
-import life.states.*;
 
 import java.io.*;
 import javax.swing.*;
+import life.controller.BoardManager;
+import life.gui.LifeWindow;
+import life.states.StateManager;
 
 /**
  * Deals with loading and saving boards
@@ -32,76 +34,52 @@ import javax.swing.*;
  *
  */
 public class BoardFile {
-	public static void load(Events e) {
-		JFileChooser fc = new JFileChooser();
-		if (fc.showOpenDialog(e.frame) == JFileChooser.APPROVE_OPTION) {
+
+	static JFileChooser fc;
+
+	public static void load(StateManager sm) {
+		if(fc == null) fc = new JFileChooser();
+		if (fc.showOpenDialog(sm.getWindow()) == JFileChooser.APPROVE_OPTION) {
 			try {
-				BufferedReader in = new BufferedReader(new FileReader(fc.getSelectedFile()));
-				String x = in.readLine();
-				int size = x.length();
-				Cell[][] cells = new Cell[size][size];
-				int i = 0;
-				do {
-					for (int j = 0; j < size; j++) {
-						cells[i][j] = toCell(x.charAt(j));
+				DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(fc.getSelectedFile())));
+				int size = in.readInt();
+				Board b = new Board(size);
+				Cell[][] cells = b.getCells();
+				for(int i = 0;i < size;i++) {
+					for(int j = 0;j < size;j++) {
+						cells[i][j].setAlive(in.readBoolean());
+						cells[i][j].setColor(new Color(in.readInt()));
 					}
-					i++;
-					x = in.readLine();
 				}
-				while (i < size);
-				e.board.setCells(cells);
-				e.frame.getView().updateSize();
-				e.frame.getView().updateAll();
+				in.close();
+				if(sm.getBoardManager() != null) sm.getBoardManager().setBoard(b);
+				if(sm.getWindow() != null) sm.getWindow().setBoard(b);
 			}
 			catch (IOException ioe) {
-				JOptionPane.showMessageDialog(e.frame, "Error loading file, please check it is a valid Life save", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(sm.getWindow(), "Error loading file, please check it is a valid Life save", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
-	public static void save(Events e) {
-		JFileChooser fc = new JFileChooser();
-		if(fc.showSaveDialog(e.frame) == JFileChooser.APPROVE_OPTION) {
-			try {
-				BufferedWriter out = new BufferedWriter(new FileWriter(fc.getSelectedFile()));
-				Cell[][] cells = e.board.getCells();
-				for(Cell[] cs : cells) {
-					for(Cell c : cs)
-						out.append(toChar(c));
-					out.newLine();
+	public static void save(StateManager sm) {
+		if(sm.getBoardManager() != null && sm.getBoardManager().getBoard() != null) {
+			if(fc == null) fc = new JFileChooser();
+			if(fc.showSaveDialog(sm.getWindow()) == JFileChooser.APPROVE_OPTION) {
+				try {
+					DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(fc.getSelectedFile())));
+					Cell[][] cells = sm.getBoardManager().getBoard().getCells();
+					out.writeInt(cells.length);
+					for(Cell[] cs : cells) {
+						for(Cell c : cs) {
+							out.writeBoolean(c.isAlive());
+							out.writeInt(c.getColor().getRGB());
+						}
+					}
+					out.close();
 				}
-				out.close();
-			}
-			catch(IOException ioe) {
-				JOptionPane.showMessageDialog(e.frame, "Error saving file", "Error", JOptionPane.ERROR_MESSAGE);
+				catch(IOException ioe) {
+					JOptionPane.showMessageDialog(sm.getWindow(), "Error saving file", "Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		}
 	}
-	static char toChar(Cell c) {
-        return c.isAlive()?'x':' ';
-		/*switch(c) {
-			case RED:
-				return 'r';
-			case GREEN:
-				return 'g';
-			default:
-				return '0';
-		}*/
-	}
-	static Cell toCell(char c) {
-        switch(c) {
-            case 'x':
-               return new Cell(true, Color.RED);
-            default:
-                return new Cell(false, Color.BLACK);
-        } 
-        /*
-		switch(c) {
-			case 'r':
-				return Cell.RED;
-			case 'g':
-				return Cell.GREEN;
-		 	default:
-		 		return Cell.DEAD;
-		 }*/
-	 }
 }
