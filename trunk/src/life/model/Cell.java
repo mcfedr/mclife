@@ -28,12 +28,16 @@ import java.awt.Color;
 public class Cell {
 
     boolean alive;
-    Color color;
+    int color;
 
-    public Cell(boolean a, Color c) {
+    public Cell(boolean a, int c) {
         alive = a;
         color = c;
     }
+
+	public Cell(boolean a, Color c) {
+		this(a, c.getRGB());
+	}
 
     public boolean isAlive() {
         return alive;
@@ -44,11 +48,19 @@ public class Cell {
     }
 
     public Color getColor() {
-        return color;
+        return new Color(color, true);
     }
 
-    public void setColor(Color color) {
-        this.color = color;
+	public int getRGB() {
+		return color;
+	}
+
+    public void setColor(Color c) {
+        color = c.getRGB();
     }
+
+	public void setRGB(int c) {
+		color = c;
+	}
 
 }

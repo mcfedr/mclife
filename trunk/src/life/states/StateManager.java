@@ -46,13 +46,12 @@ public class StateManager {
 		stopped = new StoppedEventState(this);
 
 		currentState = stopped;
-		timer = new Timer(2000 / window.getSpeed(), new ActionListener() {
+		timer = new Timer(1000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				currentState.timer();
+				getCurrentEventState().timer();
 			}
 		});
-		setStoppedState();
 	}
 
 	public BoardManager getBoardManager() {
@@ -85,11 +84,12 @@ public class StateManager {
 	}
 	public void setRunningState() {
 		currentState = running;
-		timer.start();
 		if(window != null) {
 			window.setDispatch(currentState);
 			window.setRunningState();
+			timer.setDelay(window.getSpeed());
 		}
+		timer.start();
 	}
 	public EventState getCurrentEventState() {
 		return currentState;

@@ -38,7 +38,7 @@ public class LifeView extends JPanel {
 	
 	Color background = Color.WHITE;
 	Color highlight = Color.BLACK;
-	Color gridC = Color.GRAY;
+	Color gridC = Color.LIGHT_GRAY;
 	
 	Dimension cellSize;
 	
@@ -63,9 +63,10 @@ public class LifeView extends JPanel {
 					int i = e.getX() / cellSize.width;
 					int j = e.getY() / cellSize.height;
 
-					if (i < board.getSize() && j < board.getSize()) {
+					if (i < board.getSize() && j < board.getSize())
 						highlighter.highlight(i, j);
-					}
+					else
+						highlighter.clearHighlight();
 				}
 			}
 		});
@@ -134,12 +135,10 @@ public class LifeView extends JPanel {
 		return grid;
 	}
 	void paintCell(Cell c, int i, int j) {
+		g.setColor(background);
+		g.fillRect(i * cellSize.width + 1, j * cellSize.height + 1, cellSize.width - 1, cellSize.height - 1);
 		if(c.isAlive()) {
             g.setColor(c.getColor());
-			g.fillRect(i * cellSize.width + 1, j * cellSize.height + 1, cellSize.width - 1, cellSize.height - 1);
-        }
-		else {
-            g.setColor(background);
 			g.fillRect(i * cellSize.width + 1, j * cellSize.height + 1, cellSize.width - 1, cellSize.height - 1);
         }
 	}

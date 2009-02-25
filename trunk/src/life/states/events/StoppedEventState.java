@@ -62,8 +62,9 @@ public class StoppedEventState extends EventState {
 		BoardFile.save(sm);
 	}
 
-	public void mouseClicked(MouseEvent e) {
-
+	@Override
+	public void mouseClicked(int x, int y) {
+		sm.getBoardManager().cellNextColor(x, y);
 	}
 	
 }

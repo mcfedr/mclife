@@ -40,10 +40,10 @@ public class Stepper {
 
 			for (int i = 0; i < cells.length; i++) {
 				for (int j = 0; j < cells.length; j++) {
-					nCells[i][j] = cells[i][j];
+					nCells[i][j] = new Cell(cells[i][j].isAlive(), cells[i][j].getRGB());
 					switch(countNieghbours(i, j)) {
 						case 2://change nothing
-							nCells[i][j].setColor(brighten(nCells[i][j].getColor()));
+							nCells[i][j].setRGB(brighten(nCells[i][j].getRGB()));
 							break;
 						case 3://bring to life
 							nCells[i][j].setAlive(true);
@@ -57,6 +57,7 @@ public class Stepper {
 			}
 
 			manager.getBoard().setCells(nCells);
+			manager.getBoard().incStep();
 			manager.notifyView();
 		}
 	}
@@ -83,7 +84,7 @@ public class Stepper {
 				int q = wrap(j);
 				if(!(p == x && q == y) && //so as not to count this cell
 						cells[p][q].isAlive()) {//cell alive
-					int pixel = cells[p][q].getColor().getRGB();
+					int pixel = cells[p][q].getRGB();
 					a += (pixel >> 24) & 0xff;
 			        r += (pixel >> 16) & 0xff;
 			        g += (pixel >>  8) & 0xff;
@@ -109,15 +110,14 @@ public class Stepper {
 			return i;
 	}
 
-	Color brighten(Color color) {
-		int pixel = color.getRGB();
+	int brighten(int pixel) {
 		int a = (pixel >> 24) & 0xff;
 		int r = (pixel >> 16) & 0xff;
 		int g = (pixel >> 8) & 0xff;
 		int b = (pixel) & 0xff;
 
-		a = a > 230 ? 255 : a + 25;
+		a = a > 230 ? 255 : a + 1;
 
-		return new Color(r, g, b, a);
+		return (a << 24) | (r << 16) | (g << 8) | b;
 	}
 }
