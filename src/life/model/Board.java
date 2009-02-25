@@ -51,10 +51,16 @@ public class Board {
         return cells;
     }
 
+	public void incStep() {
+		stepCount++;
+	}
+
     public void setCells(Cell[][] c) {
         cells = c;
     }
-
+	public void setCell(int i, int j, Cell c) {
+		cells[i][j] = c;
+	}
     public int getSize() {
         return cells.length;
     }

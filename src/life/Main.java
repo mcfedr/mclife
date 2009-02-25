@@ -19,8 +19,10 @@ along with mclife.  If not, see <http://www.gnu.org/licenses/>.
 
 package life;
 
+import life.controller.BoardManager;
 import life.gui.*;
 import life.model.*;
+import life.states.StateManager;
 
 /**
  * Entrance point of the program
@@ -38,33 +40,18 @@ public class Main {
 				System.out.println("Changing to minimum size of 4");
 			}
 		}
-		//make the classes
-		Board model = new Board(size);
-		
-		//LifeFrame frame = new LifeFrame(model);
-
+		Board board = new Board(size);
+		BoardManager manager = new BoardManager();
+		manager.setBoard(board);
+		StateManager sm = new StateManager();
+		sm.setBoardManager(manager);
 		LifeView view = new LifeView();
 		LifeWindow window = new LifeWindow();
 		window.setView(view);
-		window.setBoard(model);
-
+		window.setBoard(board);
+		manager.setWindow(window);
+		sm.setWindow(window);
+		sm.setStoppedState();
 		window.setVisible(true);
-
-
-		//BoardManager controller = new BoardManager(model);
-
-		//controller.setView(view);
-		
-		/*Events e = new Events(controller, frame);
-
-		//add the listeners
-		view.addMouseMotionListener(new MouseMotionEvents(e));
-		view.addMouseListener(new MouseEvents(e));
-		view.addComponentListener(new ResizeEvents(e));
-		frame.addActionListener(new ActionEvents(e));
-		frame.addChangeListener(new ChangeEvents(e));
-
-		frame.showLife();*/
-
 	}
 }
