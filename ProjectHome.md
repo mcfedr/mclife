@@ -1,0 +1,1 @@
+A game of life implementation in java. Mostly an experiment to try various ways of implementing it and extentsions to the origonal rules.
